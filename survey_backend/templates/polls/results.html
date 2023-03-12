@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    <h3>Спасибо, ваш голос учтен!</h3>
+    <h3>Результаты голосования:</h3>
+    <h5>{{ question.text }}</h5>
+
+    <ul>
+        {% for choice in question.choice_set.all %}
+            <li>{{ choice.choice }} -- {{ choice.votes }} проголосовавших</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'polls:index'%}">Вернуться на главную</a>
+{% endblock %}
