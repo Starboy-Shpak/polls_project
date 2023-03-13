@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Question, Choice, Point
+from .models import Poll, Question, Choice, Point
 
 
 class ChoiceInline(admin.TabularInline):
@@ -8,20 +8,24 @@ class ChoiceInline(admin.TabularInline):
     extra = 2
 
 
+@admin.register(Poll)
+class PollAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['text']}),
+        (None, {'fields': ['poll', 'text']}),
     ]
     inlines = [ChoiceInline]
-    list_display = ('text', 'pub_date',)
+    list_display = ('text', 'poll',)
     search_fields = ('text',)
-    list_filter = ('pub_date',)
     empty_value_display = '-пусто-'
 
 
 @admin.register(Point)
 class PointsAdmin(admin.ModelAdmin):
-    list_display = ('user', 'points',)
+    list_display = ('user', 'question',)
     search_fields = ('user',)
-    list_filter = ('points',)
+    list_filter = ('user',)

@@ -13,5 +13,5 @@
         {% endfor %}
     </ul>
 
-    <a href="{% url 'polls:index'%}">Вернуться на главную</a>
+    <a href="{% url 'polls:poll_detail' question.poll.id %}">Вернуться к опросу</a>
 {% endblock %}

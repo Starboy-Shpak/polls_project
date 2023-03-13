@@ -5,14 +5,32 @@ from django.db.models import UniqueConstraint
 User = get_user_model()
 
 
-class Question(models.Model):
-    text = models.CharField('Текст вопроса', max_length=4000, unique=True)
+class Poll(models.Model):
+    title = models.CharField('Название опроса', max_length=256, unique=True)
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
         ordering = ['-pub_date']
+        verbose_name = 'Опрос'
+        verbose_name_plural = 'Опросы'
+
+    def __str__(self):
+        return self.title
+
+
+class Question(models.Model):
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+    text = models.CharField('Текст вопроса', max_length=4000)
+
+    class Meta:
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
+        constraints = (
+            UniqueConstraint(
+                fields=('poll', 'text', ),
+                name='unique_question',
+            ),
+        )
 
     def __str__(self):
         return self.text
@@ -42,12 +60,13 @@ class Point(models.Model):
         User, on_delete=models.DO_NOTHING, verbose_name='Пользователь',
     )
     question = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
-    points = models.PositiveIntegerField('Баллы', default=0)
+    # points = models.PositiveIntegerField('Баллы', default=0)
 
     class Meta:
-        ordering = ['points']
-        # verbose_name = 'Баллы пользователей'
         verbose_name_plural = 'Баллы пользователей'
-
-    def __str__(self):
-        return f'{self.user} заработал {self.points} баллов'
+        constraints = (
+            UniqueConstraint(
+                fields=('question', 'user', ),
+                name='unique_point',
+            ),
+        )

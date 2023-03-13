@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Опрос {{ poll.title|truncatechars:15 }}{% endblock %}
+
+{% block content %}
+    {% if poll %}
+    <h5>Дата публикации опроса: {{ poll.pub_date|date:'d E Y'}}</h5>
+        <ul>
+            <h5>{{ poll.title }}</h5>
+            {% for question in questions %}
+                <li><a href="{% url 'polls:questions' question.id %}">{{ question.text }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Нет доступных вопросов</p>
+    {% endif %}
+{% endblock %}

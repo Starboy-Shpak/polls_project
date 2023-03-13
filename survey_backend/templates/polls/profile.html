@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Профиль пользователя {{ author }}{% endblock %}
+{% block title %}Профиль пользователя {{ user.username }}{% endblock %}
  
 {% block content %}
   <div class="mb-5">
-    <h1>Результаты пользователя {{ author.username }}</h1>
-    <h3>Всего пройдено опросов: {{ author.posts.count }} </h3>
+    <h1>Результаты пользователя {{ user.username }}</h1>
+    <h3>Всего пройдено опросов: {{ user.question.count }} </h3>
+    {% comment %} <h3>Всего пройдено опросов: {{ author.posts.count }} </h3> {% endcomment %}
     
     {% comment %} {% if user.username != author.username %}
       {% if following %}
@@ -26,12 +27,6 @@
     {% endif %} {% endcomment %}
   
   </div>
-{% comment %} 
-  {% for post in page_obj %}
-    {% include 'includes/post_card.html' %}
-  {% empty %}
-    <p>Пользователь ещё ничего не опубликовал</p>
-  {% endfor %} {% endcomment %}
 
 
 {% endblock %}

@@ -5,10 +5,10 @@
 {% block content %}
     <h1>Все опросы на сайте</h1>
 
-    {% if question_list %}
+    {% if polls_list %}
         <ul>
-            {% for question in question_list %}
-            <li><a href="{% url 'polls:detail' question.id %}">{{ question.text }}</a></li>
+            {% for poll in polls_list %}
+                <li><a href="{% url 'polls:poll_detail' poll.id %}">{{ poll.title }}</a></li>
             {% endfor %}
         </ul>
     {% else %}
