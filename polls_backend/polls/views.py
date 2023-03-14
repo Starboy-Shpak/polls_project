@@ -1,12 +1,12 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404, HttpResponseRedirect
-from django.views.generic.base import TemplateView
-from django.urls import reverse
-from django.views import generic
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import HttpResponseRedirect, get_object_or_404, render
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views import generic
+from django.views.generic.base import TemplateView
 
-from .models import Poll, Question, Choice, Point
+from .models import Choice, Point, Poll, Question
 
 User = get_user_model()
 
@@ -32,7 +32,7 @@ def poll_detail(request, poll_id):
 
 
 class QuestionView(generic.DetailView):
-    '''Представление каждого вопроса'''
+    '''Представление вопросов'''
 
     model = Question
     template_name = 'polls/detail.html'
@@ -89,15 +89,17 @@ class UsersListView(generic.ListView):
         return User.objects.all()
 
 
-class ProfileView(generic.DetailView):
-    '''Представление страницы пользователя'''
+def profile(request, username):
+    '''Представление личной страницы пользователя'''
 
-    model = Point
-    template_name = 'polls/profile.html'
+    user = get_object_or_404(User, username=username)
+    questions = Point.objects.filter(user=user)
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    context = {
+        'user': user,
+        'questions': questions,
+    }
+    return render(request, 'polls/profile.html', context)
 
 
 class AboutAuthorView(TemplateView):

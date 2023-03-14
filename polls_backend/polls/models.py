@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 from django.db.models import UniqueConstraint
 
 User = get_user_model()
@@ -57,16 +57,22 @@ class Choice(models.Model):
 
 class Point(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, verbose_name='Пользователь',
+        User,
+        on_delete=models.DO_NOTHING,
+        verbose_name='Пользователь',
+        related_name='respondent',
     )
-    question = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
-    # points = models.PositiveIntegerField('Баллы', default=0)
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.DO_NOTHING,
+        related_name='answered',
+    )
 
     class Meta:
         verbose_name_plural = 'Баллы пользователей'
         constraints = (
             UniqueConstraint(
-                fields=('question', 'user', ),
+                fields=('question', 'user',),
                 name='unique_point',
             ),
         )
